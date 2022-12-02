@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1k12a54" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.0.0">
+  <bpmn:process id="process_support_01" name="Support_01" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_07a7wyg" sourceRef="start_event_ticket_arrived" targetRef="activity_parse_ticket" />
+    <bpmn:serviceTask id="activity_parse_ticket" name="Parse Ticket">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="parse_ticket" retries="2" />
+        <zeebe:ioMapping>
+          <zeebe:input source="= source" target="ticket_message" />
+          <zeebe:output source="= source" target="team_code" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_07a7wyg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fion8z</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_Finish" name="Finish">
+      <bpmn:incoming>Flow_0fion8z</bpmn:incoming>
+      <bpmn:incoming>Flow_08br6rd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0fion8z" sourceRef="activity_parse_ticket" targetRef="Event_Finish" />
+    <bpmn:startEvent id="start_event_ticket_arrived" name="Ticket Arrived">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="= source" target="ticket_message" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_07a7wyg</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:boundaryEvent id="Event_08cq6ok" attachedToRef="activity_parse_ticket">
+      <bpmn:outgoing>Flow_0bnaxvg</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_06g0pb6" errorRef="Error_0f45bqb" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0bnaxvg" sourceRef="Event_08cq6ok" targetRef="error_parse_ticket" />
+    <bpmn:sendTask id="error_parse_ticket" name="Log Error Parse Ticket">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="error_parse_ticket" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bnaxvg</bpmn:incoming>
+      <bpmn:outgoing>Flow_08br6rd</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="Flow_08br6rd" sourceRef="error_parse_ticket" targetRef="Event_Finish" />
+  </bpmn:process>
+  <bpmn:message id="Message_1oi6bv1" name="Message_Ticket_Arrived" />
+  <bpmn:error id="Error_0f45bqb" name="Error_parse_ticket" errorCode="404" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_support_01">
+      <bpmndi:BPMNEdge id="Flow_07a7wyg_di" bpmnElement="Flow_07a7wyg">
+        <di:waypoint x="215" y="247" />
+        <di:waypoint x="270" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fion8z_di" bpmnElement="Flow_0fion8z">
+        <di:waypoint x="370" y="247" />
+        <di:waypoint x="432" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bnaxvg_di" bpmnElement="Flow_0bnaxvg">
+        <di:waypoint x="370" y="189" />
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="400" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08br6rd_di" bpmnElement="Flow_08br6rd">
+        <di:waypoint x="450" y="160" />
+        <di:waypoint x="450" y="229" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_01s9sh5_di" bpmnElement="activity_parse_ticket">
+        <dc:Bounds x="270" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02z82uj_di" bpmnElement="Event_Finish">
+        <dc:Bounds x="432" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="435" y="272" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m34y6k_di" bpmnElement="start_event_ticket_arrived">
+        <dc:Bounds x="179" y="229" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="272" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ptl6fg_di" bpmnElement="error_parse_ticket">
+        <dc:Bounds x="400" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0m625za_di" bpmnElement="Event_08cq6ok">
+        <dc:Bounds x="352" y="189" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

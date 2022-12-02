@@ -5,7 +5,7 @@ services:
 
   zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     image: camunda/zeebe:${CAMUNDA_PLATFORM_VERSION:-8.1.4}
-    container_name: zeebe-light
+    container_name: zeebe-lite
     ports:
       - "26500:26500"
       - "9600:9600"
@@ -27,7 +27,7 @@ services:
 
   operate: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#operate
     image: camunda/operate:${CAMUNDA_PLATFORM_VERSION:-8.1.4}
-    container_name: operate-light
+    container_name: operate-lite
     ports:
       - "8081:8080"
     environment: # https://docs.camunda.io/docs/self-managed/operate-deployment/configuration/
@@ -42,7 +42,7 @@ services:
 
   tasklist: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#tasklist
     image: camunda/tasklist:${CAMUNDA_PLATFORM_VERSION:-8.1.4}
-    container_name: tasklist-light
+    container_name: tasklist-lite
     ports:
       - "8082:8080"
     environment: # https://docs.camunda.io/docs/self-managed/tasklist-deployment/configuration/
@@ -57,7 +57,7 @@ services:
 
   connectors: # https://docs.camunda.io/docs/components/integration-framework/connectors/out-of-the-box-connectors/available-connectors-overview/
     image: camunda/connectors-bundle:${CAMUNDA_CONNECTORS_VERSION:-0.2.3}
-    container_name: connectors-light
+    container_name: connectors-lite
     environment:
       - ZEEBE_CLIENT_BROKER_GATEWAY-ADDRESS=zeebe:26500
       - ZEEBE_CLIENT_SECURITY_PLAINTEXT=true
@@ -69,7 +69,7 @@ services:
 
   elasticsearch: # https://hub.docker.com/_/elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION:-7.17.5}
-    container_name: elasticsearch-light
+    container_name: elasticsearch-lite
     ports:
       - "9200:9200"
       - "9300:9300"
